@@ -15,3 +15,7 @@ train = pd.read_csv("train.csv")
 train.head()
 
 # %%
+sns.distplot(train['Age'])
+plt.show()
+
+# %%
