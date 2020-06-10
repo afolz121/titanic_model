@@ -21,7 +21,18 @@ train.head()
 # %%
 def pipeline(df) :
     df['under_5'] = np.where(df['Age'] >= 5,1,0)
-    df['Pclass_1'] = np.where(df['Pclass'] == 1,1,0)
+    df['Pclass1'] = np.where(df['Pclass'] == 1,1,0)
+    df['cabinLetter'] = df['Cabin'].str[:1]
+    aa = [] 
+    cabinLetters = ['B','D','E','F']
+    for row in df['cabinLetter'] :
+        if row in cabinLetters :
+            aa.append(1)
+        else:
+            aa.append(0)
+    df['cabinLetter'] = aa
+    del[df['Cabin']]
+    df['Embarked'] = np.where(df['Embarked'] == 'C', 1, 0 )
     return df
 
 
@@ -37,4 +48,11 @@ for value in train.Pclass.unique() :
    print(value, str(x))
 
 # %%
-print("This is going to change everything")
+plt.figure(figsize = (10,8))
+sns.catplot(x = 'Survived', y="Fare",
+            kind="box", dodge=False, data=df)
+
+# %%
+train.to_csv('train_cleansed.csv', index = False)
+
+# %%
