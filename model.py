@@ -42,3 +42,19 @@ svmarch_predict = svmach_fit.predict(data)
 print(classification_report(target, svmarch_predict))
 
 # %%
+test = pd.read_csv('test.csv')
+test['Survived'] = 1
+
+passengers = test['PassengerId'].copy()
+
+test, target_dum = pipeline(test)
+test_preds = dtree.predict(test)
+
+preds_df = pd.DataFrame(passengers, columns = ['PassengerId'])
+preds_df['Survived'] = test_preds
+
+preds_df.to_csv("titanic_preds.csv", header = False, index = False)
+
+
+
+# %%
