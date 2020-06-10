@@ -30,6 +30,8 @@ def pipeline(df) :
     df['Sex'] = np.where(df['Sex'] == 'male', 1, 0)
     del[df['PassengerId']]
     df['Age'] = df['Age'].fillna(df['Age'].median())
+    df['Fare'] = df['Fare'].fillna(df['Fare'].median())
+
     for col in df.columns :
         df[col] = min_max(df[col])
 
