@@ -14,5 +14,7 @@ def pipeline(df) :
             aa.append(0)
     df['cabinLetter'] = aa
     del[df['Cabin']]
+    del[df['Ticket']]
+    del[df['Name']]
     df['Embarked'] = np.where(df['Embarked'] == 'C', 1, 0 )
     return df

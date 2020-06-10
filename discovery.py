@@ -33,6 +33,7 @@ def pipeline(df) :
     df['cabinLetter'] = aa
     del[df['Cabin']]
     df['Embarked'] = np.where(df['Embarked'] == 'C', 1, 0 )
+    del[df['Ticket']]
     return df
 
 
