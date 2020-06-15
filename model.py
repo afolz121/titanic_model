@@ -26,7 +26,7 @@ dtree_predict = dtree_fit.predict(data)
 print(classification_report(target, dtree_predict))
 
 # %%
-forest = RandomForestClassifier(max_depth= 4, n_estimators= 500)
+forest = RandomForestClassifier(max_depth= 3, n_estimators= 100)
 forest_fit = forest.fit(data, target)
 forest_predict = forest_fit.predict(data)
 
@@ -48,12 +48,12 @@ test['Survived'] = 1
 passengers = test['PassengerId'].copy()
 
 test, target_dum = pipeline(test)
-test_preds = dtree.predict(test)
+test_preds = forest_fit.predict(test)
 
 preds_df = pd.DataFrame(passengers, columns = ['PassengerId'])
 preds_df['Survived'] = test_preds
 
-preds_df.to_csv("titanic_preds.csv", header = False, index = False)
+preds_df.to_csv("titanic_preds.csv", header = True, index = False)
 
 
 

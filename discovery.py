@@ -5,40 +5,15 @@ import os
 import sys
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-print(os.listdir())
-
+import re
 # %%
 train = pd.read_csv("train.csv")
 
 # %%
 sns.distplot(train['Age'])
 plt.show()
-
 # %%
 train.head()
-
-# %%
-def pipeline(df) :
-    df['under_5'] = np.where(df['Age'] >= 5,1,0)
-    df['Pclass1'] = np.where(df['Pclass'] == 1,1,0)
-    df['cabinLetter'] = df['Cabin'].str[:1]
-    aa = [] 
-    cabinLetters = ['B','D','E','F']
-    for row in df['cabinLetter'] :
-        if row in cabinLetters :
-            aa.append(1)
-        else:
-            aa.append(0)
-    df['cabinLetter'] = aa
-    del[df['Cabin']]
-    df['Embarked'] = np.where(df['Embarked'] == 'C', 1, 0 )
-    del[df['Ticket']]
-    return df
-
-
-# %%
-df = pipeline(train)
 
 # %%
 train[(train['Survived'] == 1)]['under_5'].value_counts()
@@ -51,9 +26,27 @@ for value in train.Pclass.unique() :
 # %%
 plt.figure(figsize = (10,8))
 sns.catplot(x = 'Survived', y="Fare",
-            kind="box", dodge=False, data=df)
+            kind="box", dodge=False, data=train)
 
 # %%
-train.to_csv('train_cleansed.csv', index = False)
+train.head()
+# %%
+import re
+
+s = 'asdf=5;iwantthis123jasd'
+result = re.search('asdf=5;(.*)123jasd', s)
+print(result.group(1))
+
+s = 'Braund, Mr. Owen Harris'
+result = re.search(",\\s*([^.]*)", s)
+print(result.group(1))
+
+# %%
+aa = []
+for row in train['Name'] :
+    result = re.search(",\\s*([^.]*)", row)
+    aa.append(result.group(1))
+
+train['surname'] = aa
 
 # %%
