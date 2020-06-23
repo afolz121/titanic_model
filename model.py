@@ -34,7 +34,7 @@ forest_predict = forest_fit.predict(data)
 print(classification_report(target, forest_predict))
 
 # %%
-svmach = SVC(kernel= 'rbf', degree = 4)
+svmach = SVC(kernel= 'rbf', degree = 2, C = 5)
 svmach_fit = svmach.fit(data, target)
 svmarch_predict = svmach_fit.predict(data)
 
@@ -57,4 +57,18 @@ preds_df.to_csv("titanic_preds.csv", header = True, index = False)
 
 
 
+# %%
+from sklearn.model_selection import GridSearchCV
+
+params = {'kernel' : ['rbf','poly','sigmoid'],
+	'C' : [.1,.5,.8,1,2,10],
+	'degree' : [1,2,3,4,5]
+}
+
+gs = GridSearchCV(SVC(), param_grid=params, scoring = 'accuracy', 
+cv=10, n_jobs= -1
+)
+
+gs_fit = gs.fit(data, target)
+print(gs_fit.best_params_)
 # %%
