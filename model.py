@@ -34,12 +34,27 @@ forest_predict = forest_fit.predict(data)
 print(classification_report(target, forest_predict))
 
 # %%
-svmach = SVC(kernel= 'rbf', degree = 4)
+svmach = SVC(kernel= 'rbf', degree = 1, C = 10)
 svmach_fit = svmach.fit(data, target)
 svmarch_predict = svmach_fit.predict(data)
 
 # %%
 print(classification_report(target, svmarch_predict))
+
+#%%
+from sklearn.model_selection import GridSearchCV
+
+params = {
+    "C" : [0.1, .5, .8, 1, 2, 3, 10],
+    "kernel" : ['rbf'] , 
+    "degree" : [1,2,3,4,5]
+}
+
+grid = GridSearchCV(SVC(), param_grid= params, n_jobs= 5, cv = 20, error_score= "accuracy")
+
+grid_fit = grid.fit(data, target)
+
+grid_fit.best_params_
 
 # %%
 test = pd.read_csv('test.csv')
