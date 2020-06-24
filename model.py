@@ -73,3 +73,17 @@ preds_df.to_csv("titanic_preds.csv", header = True, index = False)
 
 
 # %%
+from sklearn.model_selection import GridSearchCV
+
+params = {'kernel' : ['rbf','poly','sigmoid'],
+	'C' : [.1,.5,.8,1,2,10],
+	'degree' : [1,2,3,4,5]
+}
+
+gs = GridSearchCV(SVC(), param_grid=params, scoring = 'accuracy', 
+cv=10, n_jobs= -1
+)
+
+gs_fit = gs.fit(data, target)
+print(gs_fit.best_params_)
+# %%
