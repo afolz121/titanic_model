@@ -9,44 +9,32 @@ import re
 # %%
 train = pd.read_csv("train.csv")
 
-# %%
-sns.distplot(train['Age'])
-plt.show()
-# %%
 train.head()
 
 # %%
-train[(train['Survived'] == 1)]['under_5'].value_counts()
+train.groupby('Survived')['Sex'].value_counts(normalize = True)
 
 # %%
-for value in train.Pclass.unique() :
-   x =  train[(train['Survived'] == 1) & (train['Pclass'] == value)].shape[0] / train.shape[0]
-   print(value, str(x))
+male = train[train['Sex'] == 'male']
 
 # %%
-plt.figure(figsize = (10,8))
-sns.catplot(x = 'Survived', y="Fare",
-            kind="box", dodge=False, data=train)
+for num in [0,1] :
+    male[male['Survived'] == num]['Age'].hist(bins = 20)
+    plt.title(str(num))
+    plt.show()
 
 # %%
-train.head()
-# %%
-import re
-
-s = 'asdf=5;iwantthis123jasd'
-result = re.search('asdf=5;(.*)123jasd', s)
-print(result.group(1))
-
-s = 'Braund, Mr. Owen Harris'
-result = re.search(",\\s*([^.]*)", s)
-print(result.group(1))
+male.head()
 
 # %%
-aa = []
-for row in train['Name'] :
-    result = re.search(",\\s*([^.]*)", row)
-    aa.append(result.group(1))
+aa= []
+for row in male['Name'] :
+    aa.append(row.split(' ', 2)[1])
 
-train['surname'] = aa
+# %%
+male['title'] = aa
+
+# %%
+male.groupby('Survived')['title'].value_counts(normalize = True)
 
 # %%

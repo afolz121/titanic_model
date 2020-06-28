@@ -16,6 +16,8 @@ train = pd.read_csv('train.csv')
 # %%
 data, target = pipeline(train)
 
+data.head()
+
 # %%
 dtree = DecisionTreeClassifier(max_depth= 4)
 dtree_fit = dtree.fit(data, target)
@@ -42,20 +44,16 @@ svmarch_predict = svmach_fit.predict(data)
 print(classification_report(target, svmarch_predict))
 
 # %%
-test = pd.read_csv('test.csv')
-test['Survived'] = 1
+from sklearn.ensemble import GradientBoostingClassifier
 
-passengers = test['PassengerId'].copy()
+gb = GradientBoostingClassifier(learning_rate = 0.1,
+n_estimators = 200,
+max_depth = 3)
 
-test, target_dum = pipeline(test)
-test_preds = forest_fit.predict(test)
+gb_fit = gb.fit(data, target)
+gb_predict = gb.predict(data)
 
-preds_df = pd.DataFrame(passengers, columns = ['PassengerId'])
-preds_df['Survived'] = test_preds
-
-preds_df.to_csv("titanic_preds.csv", header = True, index = False)
-
-
+print(classification_report(target, gb_predict))
 
 # %%
 from sklearn.model_selection import GridSearchCV
@@ -71,4 +69,21 @@ cv=10, n_jobs= -1
 
 gs_fit = gs.fit(data, target)
 print(gs_fit.best_params_)
+
+# %%
+test = pd.read_csv('test.csv')
+test['Survived'] = 1
+
+passengers = test['PassengerId'].copy()
+
+test, target_dum = pipeline(test)
+test_preds = forest_fit.predict(test)
+
+preds_df = pd.DataFrame(passengers, columns = ['PassengerId'])
+preds_df['Survived'] = test_preds
+
+preds_df.to_csv("titanic_preds.csv", header = True, index = False)
+
+
+# %%
 # %%

@@ -37,7 +37,7 @@ def pipeline(df) :
         result = re.search(",\\s*([^.]*)", row)
         aa.append(result.group(1))
     dummy = pd.get_dummies(pd.DataFrame(aa, columns = ['Surname']), prefix = 'surname')
-    dummy = dummy[['surname_Mrs','surname_Ms','surname_Miss']]
+    dummy = dummy[['surname_Mrs','surname_Ms','surname_Miss', 'surname_Master']]
     df = pd.concat([df,dummy], axis = 1)
     del[df['Name']]
 
