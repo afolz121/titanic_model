@@ -10,6 +10,9 @@ import math
 from sklearn.metrics import confusion_matrix, classification_report, roc_auc_score
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
+import time
+
+time1 = time.time()
 
 # %%
 train = pd.read_csv('train.csv')
@@ -122,4 +125,8 @@ preds_df.to_csv("titanic_preds.csv", header = True, index = False)
 
 
 # %%
+# %%
+print("Total Run Time: " + str((time.time() - time1) / 60) + " Minutes")
+
+
 # %%
