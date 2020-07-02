@@ -102,12 +102,11 @@ params = {'kernel' : ['rbf','poly','sigmoid'],
 	'degree' : [1,2,3,4,5]
 }
 
-gs = GridSearchCV(SVC(), param_grid=params, scoring = 'accuracy', 
-cv=10, n_jobs= -1
-)
-
-gs_fit = gs.fit(data, target)
-print(gs_fit.best_params_)
+#gs = GridSearchCV(SVC(), param_grid=params, scoring = 'accuracy', 
+#cv=10, n_jobs= -1
+#)
+#gs_fit = gs.fit(data, target)
+#print(gs_fit.best_params_)
 
 # %%
 test = pd.read_csv('test.csv')
