@@ -7,8 +7,12 @@ from cleanse_pipe import pipeline
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 import math
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import confusion_matrix, classification_report, roc_auc_score
 from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
+import time
+
+time1 = time.time()
 
 # %%
 train = pd.read_csv('train.csv')
@@ -28,12 +32,32 @@ dtree_predict = dtree_fit.predict(data)
 print(classification_report(target, dtree_predict))
 
 # %%
-forest = RandomForestClassifier(max_depth= 3, n_estimators= 100)
+forest = RandomForestClassifier(bootstrap=True, criterion='gini', max_depth= None, max_features = 'log2', min_samples_leaf= 5,
+                                min_samples_split = 2, n_estimators= 200)
 forest_fit = forest.fit(data, target)
 forest_predict = forest_fit.predict(data)
 
+#%%
+rforest = RandomForestClassifier()
+
+grid = {"max_depth": [None],
+              "max_features": [3,"sqrt", "log2",7],
+              "min_samples_split": [n for n in range(2, 9)],
+              "min_samples_leaf": [5, 6, 7],
+              "bootstrap": [False, True],
+              "n_estimators" :[200, 500],
+              "criterion": ["gini", "entropy"]}
+
+
+rforest_grid = GridSearchCV(rforest, param_grid = grid, cv=20, scoring="roc_auc", n_jobs= -1, verbose = 1)
+
+rforest_grid_fit = rforest_grid.fit(data, target)
+
+print(rforest_grid_fit.best_params_)
+
 # %%
 print(classification_report(target, forest_predict))
+print(roc_auc_score(target, forest_predict))
 
 # %%
 svmach = SVC(kernel= 'rbf', degree = 1, C = 10)
@@ -52,7 +76,7 @@ params = {
     "degree" : [1,2,3,4,5]
 }
 
-grid = GridSearchCV(SVC(), param_grid= params, n_jobs= 5, cv = 20, error_score= "accuracy")
+grid = GridSearchCV(SVC(), param_grid= params, n_jobs= 5, cv = 20, error_score= "roc_auc")
 
 grid_fit = grid.fit(data, target)
 
@@ -78,12 +102,11 @@ params = {'kernel' : ['rbf','poly','sigmoid'],
 	'degree' : [1,2,3,4,5]
 }
 
-gs = GridSearchCV(SVC(), param_grid=params, scoring = 'accuracy', 
-cv=10, n_jobs= -1
-)
-
-gs_fit = gs.fit(data, target)
-print(gs_fit.best_params_)
+#gs = GridSearchCV(SVC(), param_grid=params, scoring = 'accuracy', 
+#cv=10, n_jobs= -1
+#)
+#gs_fit = gs.fit(data, target)
+#print(gs_fit.best_params_)
 
 # %%
 test = pd.read_csv('test.csv')
@@ -92,7 +115,7 @@ test['Survived'] = 1
 passengers = test['PassengerId'].copy()
 
 test, target_dum = pipeline(test)
-test_preds = forest_fit.predict(test)
+test_preds = gb_fit.predict(test)
 
 preds_df = pd.DataFrame(passengers, columns = ['PassengerId'])
 preds_df['Survived'] = test_preds
@@ -101,4 +124,8 @@ preds_df.to_csv("titanic_preds.csv", header = True, index = False)
 
 
 # %%
+# %%
+print("Total Run Time: " + str((time.time() - time1) / 60) + " Minutes")
+
+
 # %%

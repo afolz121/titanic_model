@@ -13,15 +13,6 @@ def min_max(col) :
 def pipeline(df) :
     df['under_5'] = np.where(df['Age'] >= 5,1,0)
     df['Pclass1'] = np.where(df['Pclass'] == 1,1,0)
-    df['cabinLetter'] = df['Cabin'].str[:1]
-    aa = [] 
-    cabinLetters = ['B','D','E','F']
-    for row in df['cabinLetter'] :
-        if row in cabinLetters :
-            aa.append(1)
-        else:
-            aa.append(0)
-    df['cabinLetter'] = aa
     del[df['Cabin']]
     del[df['Ticket']]
     #del[df['Name']]
@@ -36,12 +27,16 @@ def pipeline(df) :
     for row in df['Name'] :
         result = re.search(",\\s*([^.]*)", row)
         aa.append(result.group(1))
-    dummy = pd.get_dummies(pd.DataFrame(aa, columns = ['Surname']), prefix = 'surname')
-    dummy = dummy[['surname_Mrs','surname_Ms','surname_Miss', 'surname_Master']]
-    df = pd.concat([df,dummy], axis = 1)
+    bb= []
+    for row in df['Name'] :
+        bb.append(row.split(' ', 2)[1])
+    df['title'] = bb
+    special_titles = ['Master.','nada','Mrs.']
+    df['special_titles'] = np.where(df['title'].isin(special_titles), 1, 0)
+    del[df['title']]
     del[df['Name']]
-
-
+    df['fsize'] = df['Parch'] + df['SibSp']
+    del[df['fsize'], df['SibSp']]
     for col in df.columns :
         df[col] = min_max(df[col])
 
