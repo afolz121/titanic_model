@@ -41,15 +41,15 @@ forest_predict = forest_fit.predict(data)
 rforest = RandomForestClassifier()
 
 grid = {"max_depth": [None],
-              "max_features": [3,"sqrt", "log2"],
-              "min_samples_split": [n for n in range(1, 9)],
-              "min_samples_leaf": [5, 7],
+              "max_features": [3,"sqrt", "log2",7],
+              "min_samples_split": [n for n in range(2, 9)],
+              "min_samples_leaf": [5, 6, 7],
               "bootstrap": [False, True],
               "n_estimators" :[200, 500],
               "criterion": ["gini", "entropy"]}
 
 
-rforest_grid = GridSearchCV(rforest, param_grid = grid, cv=10, scoring="roc_auc", n_jobs= -1, verbose = 1)
+rforest_grid = GridSearchCV(rforest, param_grid = grid, cv=20, scoring="roc_auc", n_jobs= -1, verbose = 1)
 
 rforest_grid_fit = rforest_grid.fit(data, target)
 
@@ -76,7 +76,7 @@ params = {
     "degree" : [1,2,3,4,5]
 }
 
-grid = GridSearchCV(SVC(), param_grid= params, n_jobs= 5, cv = 20, error_score= "accuracy")
+grid = GridSearchCV(SVC(), param_grid= params, n_jobs= 5, cv = 20, error_score= "roc_auc")
 
 grid_fit = grid.fit(data, target)
 
@@ -115,7 +115,7 @@ test['Survived'] = 1
 passengers = test['PassengerId'].copy()
 
 test, target_dum = pipeline(test)
-test_preds = forest_fit.predict(test)
+test_preds = gb_fit.predict(test)
 
 preds_df = pd.DataFrame(passengers, columns = ['PassengerId'])
 preds_df['Survived'] = test_preds
