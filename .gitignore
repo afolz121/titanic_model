@@ -355,4 +355,4 @@ train_cleansed.csv
 titanic_preds.csv
 gender_submission.csv
 __pycache__
-predictions.csv
+prediction.csv
