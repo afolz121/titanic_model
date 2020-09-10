@@ -23,7 +23,7 @@ data, passengers = cleanse_data(train)
 # %%
 data.head()
 # %%
-exp_clf = setup(data, target = 'Survived', train_size = .7, normalize= True)
+exp_clf = setup(data, target = 'Survived', train_size = .7, normalize= True, log_experiment= False)
 # %%
 
 exp_clf[0].head()
