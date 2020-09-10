@@ -47,6 +47,6 @@ preds = predict_model(tuned_cat, data = test_data)
 ready_preds = pd.DataFrame(passengers1, columns = ['PassengerId'])
 ready_preds['Survived'] = preds['Label']
 
-ready_preds.to_csv('prediction.csv', index = False)
+ready_preds.to_csv('titanic_preds.csv', index = False)
 
 # %%
