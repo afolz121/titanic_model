@@ -6,14 +6,17 @@ import graphviz
 import pydotplus
 import collections
 from IPython.display import Image
-from cleanse_pipe import pipeline
+from cleanse_pipe import cleanse_data
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.metrics import roc_auc_score
 
 
 #%%
 train = pd.read_csv('train.csv')
-data, target = pipeline(train)
+data, passengers = cleanse_data(train)
+
+target = data['Survived']
+del[data['Survived']]
 
 #%% 
 # run decision tree model
@@ -59,14 +62,11 @@ pd.DataFrame(confusion_matrix(target,dtree_predict), columns = ['No Survive Actu
 index = ['No Survive Predicted','Survive Predicted'])
 # %%
 test = pd.read_csv('test.csv')
-test['Survived'] = 1
 
-passengers = test['PassengerId'].copy()
+test1, test_passengers = cleanse_data(test)
+test_preds = dtree_fit.predict(test1)
 
-test, target_dum = pipeline(test)
-test_preds = dtree_fit.predict(test)
-
-preds_df = pd.DataFrame(passengers, columns = ['PassengerId'])
+preds_df = pd.DataFrame(test_passengers, columns = ['PassengerId'])
 preds_df['Survived'] = test_preds
 
 preds_df.to_csv("titanic_preds.csv", header = True, index = False)

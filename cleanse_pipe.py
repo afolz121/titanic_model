@@ -9,14 +9,16 @@ def cleanse_data(df) :
     for name in df.Name :
         aa.append(re.findall(r"(?<=, )[\w]*",name)[0])
     df['Name'] = aa
-    df['Name'] = np.where(df['Name'].isin(['Mlle','Mme','Ms','the']), 'Lady', df['Name'])
+    df['Name'] = np.where(df['Name'].isin(['Mlle','Mme','Lady','the']), 'Ms', df['Name'])
     df['Name'] = np.where(df['Name'].isin(['Master', 'Dr', 'Major', 'Sir']), 'Master', df['Name'])
-    df['Name'] = np.where(df['Name'].isin(['Rev', 'Col','Jonkheer', 'Capt', 'Don']), 'Mr', df['Name'])
+    df['Name'] = np.where(df['Name'].isin(['Rev', 'Col','Jonkheer', 'Capt', 'Don','Dona']), 'Mr', df['Name'])
     for index, row in df.iterrows() :
         if np.isnan(row['Age']) :
             df['Age'][index] = df[df['Name'] == df['Name'][index]]['Age'].mean()
         else:
             pass
+    df['Age'] = df['Age'].fillna(df['Age'].mean())
+
     df['Embarked'] = df['Embarked'].fillna(df['Embarked'].mode()[0])
     embarked_dummies = pd.get_dummies(df['Embarked'], prefix = 'Embarked')
     df = pd.concat([df, embarked_dummies], axis = 1)
@@ -28,6 +30,7 @@ def cleanse_data(df) :
     df['Sex_Male'] = np.where(df['Sex'] == 'male', 1,0)
     passengers = df['PassengerId']
     del[df['PassengerId'], df['Sex'], df['Name']]
+    df['Fare'] = df['Fare'].fillna(df['Fare'].mean())
     aa = []
     for row in df['Fare'] :
         if row in pd.Interval(left = -0.1, right = 7.0) :
