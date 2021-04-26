@@ -23,23 +23,22 @@ data, passengers = cleanse_data(train)
 # %%
 data.head()
 # %%
-exp_clf = setup(data, target = 'Survived', train_size = .7, normalize= True, log_experiment= False)
+# normalize data since we are going to be using models that need normalization
+exp_clf = setup(data, target = 'Survived', train_size = .8, normalize= True, log_experiment= False)
 # %%
 
-exp_clf[0].head()
+# exp_clf[0].head()
 
 #%%
 
 best = compare_models()
 # %%
-catboost = create_model('gbc')
+catboost = create_model('rf')
 
 # %%
-tuned_cat = tune_model(catboost, n_iter= 200)
+tuned_cat = tune_model(catboost, n_iter= 100)
 # %%
-
 test = pd.read_csv('test.csv')
-
 test_data, passengers1 = cleanse_data(test)
 
 preds = predict_model(tuned_cat, data = test_data)
