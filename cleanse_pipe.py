@@ -12,11 +12,11 @@ def cleanse_data(df) :
     df['Name'] = np.where(df['Name'].isin(['Mlle','Mme','Lady','the']), 'Ms', df['Name'])
     df['Name'] = np.where(df['Name'].isin(['Master', 'Dr', 'Major', 'Sir']), 'Master', df['Name'])
     df['Name'] = np.where(df['Name'].isin(['Rev', 'Col','Jonkheer', 'Capt', 'Don','Dona']), 'Mr', df['Name'])
-    for index, row in df.iterrows() :
-        if np.isnan(row['Age']) :
-            df['Age'][index] = df[df['Name'] == df['Name'][index]]['Age'].mean()
-        else:
-            pass
+    #for index, row in df.iterrows() :
+     #   if np.isnan(row['Age']) :
+      #      df['Age'][index] = df[df['Name'] == df['Name'][index]]['Age'].mean()
+       # else:
+        #    pass
     df['Age'] = df['Age'].fillna(df['Age'].mean())
 
     df['Embarked'] = df['Embarked'].fillna(df['Embarked'].mode()[0])
